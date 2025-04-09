@@ -131,7 +131,7 @@ int main() {
 📦 Space Complexity: O(1)
 
 
-
+3) Hospital patient appointment system based on priority queue . Best DS , time complexity
 
 #include <stdio.h>
 

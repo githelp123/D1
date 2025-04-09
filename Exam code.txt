@@ -1,0 +1,337 @@
+﻿Exam code
+
+
+
+
+
+
+Q1) University Students Record System
+* Fast retrieval of student details based on minimum effort insertion/deletion.
+
+* Top 3 students in course based on grades.
+
+i) Identify suitable Data Structure.
+ii) Find time complexity and justify.
+iii) Retrieve top 3 students effectively.
+
+Answer
+
+
+#include <stdio.h>
+#include <stdlib.h>
+
+
+struct Student {
+    char name[50];
+    float grade;
+};
+
+
+void insertStudents(struct Student s[], int n) {
+    for (int i = 0; i < n; i++) {
+        printf("Enter name and grade of student %d: ", i + 1);
+        scanf("%s %f", s[i].name, &s[i].grade);
+    }
+}
+
+
+// Simple bubble sort to sort students based on grade
+void sortStudents(struct Student s[], int n) {
+    struct Student temp;
+    for (int i = 0; i < n - 1; i++) {
+        for (int j = 0; j < n - i - 1; j++) {
+            if (s[j].grade < s[j + 1].grade) {
+                temp = s[j];
+                s[j] = s[j + 1];
+                s[j + 1] = temp;
+            }
+        }
+    }
+}
+
+
+void printTopThree(struct Student s[], int n) {
+    printf("\nTop 3 Students:\n");
+    for (int i = 0; i < 3 && i < n; i++) {
+        printf("%s - %.2f\n", s[i].name, s[i].grade);
+    }
+}
+
+
+int main() {
+    int n;
+    printf("Enter number of students: ");
+    scanf("%d", &n);
+
+
+    struct Student s[n];
+    insertStudents(s, n);
+    sortStudents(s, n);
+    printTopThree(s, n);
+
+
+    return 0;
+}
+
+
+⏱️ Time Complexity: O(n²) (can be improved using heap)
+📦 Space Complexity: O(1)
+
+
+
+
+
+
+
+
+Q2) Optimize ride matching algorithm (like cab service)
+   * Suggest appropriate data structure to search cab drivers.
+
+   * Find time complexity.
+
+#include <stdio.h>
+#include <string.h>
+
+
+struct Driver {
+    char name[50];
+    char location[20];
+};
+
+
+void findDriver(struct Driver d[], int n, char loc[]) {
+    printf("Available drivers at %s:\n", loc);
+    for (int i = 0; i < n; i++) {
+        if (strcmp(d[i].location, loc) == 0) {
+            printf("%s\n", d[i].name);
+        }
+    }
+}
+
+
+int main() {
+    struct Driver d[5] = {
+        {"Ravi", "A"}, {"John", "B"}, {"Aman", "A"}, {"Ali", "C"}, {"Pooja", "B"}
+    };
+
+
+    char userLoc[20];
+    printf("Enter your location: ");
+    scanf("%s", userLoc);
+
+
+    findDriver(d, 5, userLoc);
+
+
+    return 0;
+}
+
+
+⏱️ Time Complexity: O(n)
+📦 Space Complexity: O(1)
+
+
+
+
+#include <stdio.h>
+
+
+struct Patient {
+    char name[50];
+    int priority;
+};
+
+
+void sortByPriority(struct Patient p[], int n) {
+    struct Patient temp;
+    for (int i = 0; i < n - 1; i++) {
+        for (int j = 0; j < n - i - 1; j++) {
+            if (p[j].priority < p[j + 1].priority) {
+                temp = p[j];
+                p[j] = p[j + 1];
+                p[j + 1] = temp;
+            }
+        }
+    }
+}
+
+
+void display(struct Patient p[], int n) {
+    printf("\nPatient list based on priority:\n");
+    for (int i = 0; i < n; i++) {
+        printf("%s - Priority %d\n", p[i].name, p[i].priority);
+    }
+}
+
+
+int main() {
+    struct Patient p[3] = {
+        {"Ravi", 2}, {"Meena", 3}, {"Sohail", 1}
+    };
+
+
+    sortByPriority(p, 3);
+    display(p, 3);
+
+
+    return 0;
+}
+
+
+⏱️ Time Complexity: O(n²)
+📦 Space Complexity: O(1)
+
+
+Q4) Fitness app that calculates the minimum energy to climb up stairs in which each stair has different step cost.
+      * Use Dynamic Programming optimization.
+
+      * Find recurrence relation & time and space complexity.
+#include <stdio.h>
+
+
+int minEnergy(int cost[], int n) {
+    int dp[n];
+    dp[0] = cost[0];
+    dp[1] = cost[1];
+
+
+    for (int i = 2; i < n; i++) {
+        dp[i] = cost[i] + (dp[i - 1] < dp[i - 2] ? dp[i - 1] : dp[i - 2]);
+    }
+
+
+    return (dp[n - 1] < dp[n - 2]) ? dp[n - 1] : dp[n - 2];
+}
+
+
+int main() {
+    int cost[] = {10, 15, 20, 10};
+    int n = sizeof(cost) / sizeof(cost[0]);
+
+
+    int min = minEnergy(cost, n);
+    printf("Minimum energy required: %d\n", min);
+
+
+    return 0;
+}
+
+
+⏱️ Time Complexity: O(n)
+📦 Space Complexity: O(n)
+
+
+Q5) Book store maintains inventory of books.
+         * Use Binary Search to search books & recommendations by title.
+
+         * When you buy books, stock is updated dynamically.
+#include <stdio.h>
+#include <string.h>
+
+
+struct Book {
+    char title[50];
+};
+
+
+int binarySearch(struct Book b[], int n, char key[]) {
+    int low = 0, high = n - 1, mid;
+
+
+    while (low <= high) {
+        mid = (low + high) / 2;
+        int cmp = strcmp(b[mid].title, key);
+        if (cmp == 0) return mid;
+        else if (cmp < 0) low = mid + 1;
+        else high = mid - 1;
+    }
+
+
+    return -1;
+}
+
+
+int main() {
+    struct Book b[] = {{"C"}, {"C++"}, {"Java"}, {"Python"}, {"SQL"}};
+    char key[50];
+    printf("Enter book title to search: ");
+    scanf("%s", key);
+
+
+    int index = binarySearch(b, 5, key);
+    if (index != -1) {
+        printf("Book found at position %d\n", index + 1);
+    } else {
+        printf("Book not found.\n");
+    }
+
+
+    return 0;
+}
+
+
+⏱️ Time Complexity: O(log n)
+📦 Space Complexity: O(1)
+
+
+
+
+Q6) In a warehouse, packages are arriving and leaving in FIFO (Queue).
+            * Check the most recent package using LIFO (Stack).
+
+            * Find time & space complexity.
+
+
+#include <stdio.h>
+#define SIZE 5
+
+
+// FIFO using Queue
+void fifoDemo() {
+    int queue[SIZE], front = -1, rear = -1;
+
+
+    printf("FIFO (Queue):\n");
+    for (int i = 0; i < SIZE; i++) {
+        int x = i + 1;
+        queue[++rear] = x;
+        if (front == -1) front = 0;
+        printf("Package %d arrived.\n", x);
+    }
+
+
+    printf("Processing FIFO:\n");
+    while (front <= rear) {
+        printf("Processing package %d\n", queue[front++]);
+    }
+}
+
+
+// LIFO using Stack
+void lifoDemo() {
+    int stack[SIZE], top = -1;
+
+
+    printf("\nLIFO (Stack):\n");
+    for (int i = 0; i < SIZE; i++) {
+        stack[++top] = i + 1;
+        printf("Package %d arrived.\n", i + 1);
+    }
+
+
+    printf("Processing LIFO:\n");
+    while (top >= 0) {
+        printf("Processing package %d\n", stack[top--]);
+    }
+}
+
+
+int main() {
+    fifoDemo();
+    lifoDemo();
+    return 0;
+}
+
+
+⏱️ Time Complexity: O(n)
+📦 Space Complexity: O(n)
